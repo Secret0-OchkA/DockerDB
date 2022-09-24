@@ -1,0 +1,10 @@
+﻿@model List<Company>
+<table>
+    <thead>
+        <tr><td>Id</td><td>Name</td></tr>
+        @foreach(var c in Model)
+        {
+            <tr><td>@c.Id</td><td>@c.Name</td></tr>
+        }
+    </thead>
+</table>

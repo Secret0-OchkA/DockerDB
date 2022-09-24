@@ -1,0 +1,19 @@
+﻿@model List<Person>
+<table>
+    <thead>
+        <tr><td>Id</td><td>Name</td><td>Work</td></tr>
+        @foreach(var p in Model)
+        {
+            <tr><td>@p.Id</td><td>@p.Age</td><td>@p.Name</td>
+                @if(@p.Work == null) 
+                {
+                    <td>no work</td>
+                } 
+                else 
+                {
+                    <td>@p.Work.Name</td>
+                }
+                </tr>
+        }
+    </thead>
+</table>

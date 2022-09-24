@@ -1,0 +1,78 @@
+version: '3.4'
+
+services:
+  api:
+    container_name: api
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    command:
+    - dotnet ef migrations bundle
+    ports:
+    - "49151:80"
+    depends_on:
+    - postgres
+    networks:
+    - docker_db
+
+  web:
+    container_name: web
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    ports:
+    - "49150:80"
+    depends_on:
+    - api
+    networks:
+    - docker_db
+
+  postgres:
+    container_name: postgresdb
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "apidb"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "secretochka2442"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres -d apidb"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - docker_db
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:5.7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "scretochka@yandex.ru"
+      PGADMIN_DEFAULT_PASSWORD: "secretochka2442"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    networks:
+      - docker_db
+
+networks:
+  docker_db:
+    driver: bridge
