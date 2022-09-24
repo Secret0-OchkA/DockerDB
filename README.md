@@ -15,3 +15,4 @@
 
 единственная проблема нужно создать sript-migration и выполнить его через pgAdmin или pgsql
 
+apiClient сгенерировать NSwagStudio
