@@ -1,6 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestDockerBD.ApiClient;
 
 namespace DockerTestBDWeb.Contollers
@@ -34,7 +32,7 @@ namespace DockerTestBDWeb.Contollers
         }
         [HttpGet]
         [Route("Post")]
-        public async Task<IActionResult> Post([FromQuery]string name)
+        public async Task<IActionResult> Post([FromQuery] string name)
         {
             await client.CompaniesPOSTAsync(name).ConfigureAwait(false);
             return Redirect("~/Company/Index");

@@ -11,6 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiClient", "ApiClient\ApiC
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E1DA1A0D-582E-448E-8B2D-67EE7FCCA50A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{05157ECC-8CEC-4F41-A5A0-BD8A2EBB56A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{41034265-0ECB-449E-BE8A-D0F5FBCC9824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{E80263C7-5020-4C13-919D-DFDDC0D254C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{A2C68783-9D62-4076-955C-70BAF626D469}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +41,26 @@ Global
 		{E1DA1A0D-582E-448E-8B2D-67EE7FCCA50A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1DA1A0D-582E-448E-8B2D-67EE7FCCA50A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1DA1A0D-582E-448E-8B2D-67EE7FCCA50A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41034265-0ECB-449E-BE8A-D0F5FBCC9824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41034265-0ECB-449E-BE8A-D0F5FBCC9824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41034265-0ECB-449E-BE8A-D0F5FBCC9824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41034265-0ECB-449E-BE8A-D0F5FBCC9824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E80263C7-5020-4C13-919D-DFDDC0D254C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E80263C7-5020-4C13-919D-DFDDC0D254C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E80263C7-5020-4C13-919D-DFDDC0D254C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E80263C7-5020-4C13-919D-DFDDC0D254C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2C68783-9D62-4076-955C-70BAF626D469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2C68783-9D62-4076-955C-70BAF626D469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2C68783-9D62-4076-955C-70BAF626D469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2C68783-9D62-4076-955C-70BAF626D469}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{41034265-0ECB-449E-BE8A-D0F5FBCC9824} = {05157ECC-8CEC-4F41-A5A0-BD8A2EBB56A2}
+		{E80263C7-5020-4C13-919D-DFDDC0D254C3} = {05157ECC-8CEC-4F41-A5A0-BD8A2EBB56A2}
+		{A2C68783-9D62-4076-955C-70BAF626D469} = {05157ECC-8CEC-4F41-A5A0-BD8A2EBB56A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {74D3609A-A138-46BB-B581-953B683207AA}

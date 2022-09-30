@@ -1,8 +1,7 @@
-﻿using DockerTestBD.Api.Models.EF;
-using DockerTestBD.Api.Models.EF.Tables;
+﻿using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Repository.RepositoryPattern;
 using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,18 +15,17 @@ namespace DockerTestBD.Api.Controllers
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        readonly ApiContext context;
+        readonly IRepository<Company> repository;
         readonly ILogger logger;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="context"></param>
         /// <param name="logger"></param>
-        public CompaniesController(ApiContext context, ILogger<CompaniesController> logger)
+        public CompaniesController(IRepository<Company> repository, ILogger<CompaniesController> logger)
         {
-            this.context = context;
+            this.repository = repository;
             this.logger = logger;
-
         }
         /// <summary>
         /// GET: api/Companies
@@ -37,7 +35,7 @@ namespace DockerTestBD.Api.Controllers
         public IEnumerable<Company> Get()
         {
             logger.LogInformation("GET: api/Companies", DateTime.UtcNow.ToLongTimeString());
-            return from c in context.Companies.Include(c => c.Workers) select c;
+            return repository.GetAll();
         }
 
         /// <summary>
@@ -49,9 +47,7 @@ namespace DockerTestBD.Api.Controllers
         public Company Get(int id)
         {
             logger.LogInformation($"GET /api/Companies/{id}", DateTime.UtcNow.ToLongTimeString());
-            return (from c in context.Companies.Include(c => c.Workers)
-                    where c.Id == id
-                    select c).FirstOrDefault(new Company());
+            return repository.Get(id);
         }
 
         /// <summary>
@@ -62,10 +58,8 @@ namespace DockerTestBD.Api.Controllers
         public async Task<StatusCodeResult> Post([FromQuery, Required] string value)
         {
             logger.LogInformation($"POST /api/Companies Query:{Request.QueryString}", DateTime.UtcNow.ToLongTimeString());
-            Company company = new Company();
-            company.Name = value;
-            await context.Companies.AddAsync(company);
-            await context.SaveChangesAsync();
+            repository.Insert(new Company { Name = value });
+            repository.SaveChanges();
             return Ok();
         }
 
@@ -77,21 +71,13 @@ namespace DockerTestBD.Api.Controllers
         [HttpPut("{id}")]
         public async Task<StatusCodeResult> Put(int id, [FromBody, Required] Company value)
         {
-            Company? Company = (from c in context.Companies
-                              where c.Id == id
-                              select c).FirstOrDefault();
+            Company company = repository.Get(id);
 
+            company.Name = value.Name;
+            company.Workers = value.Workers;
 
-            if (Company == null)
-            {
-                logger.LogWarning($"PUT api/Companies/{id} NotFound body:{JsonConvert.SerializeObject(value)}", DateTime.UtcNow.ToLongTimeString());
-                return BadRequest();
-            }
-
-            Company.Name = value.Name;
-            Company.Workers = value.Workers;
-
-            await context.SaveChangesAsync();
+            repository.Update(company);
+            repository.SaveChanges();
 
             logger.LogInformation($"PUT api/Companies/{id} body:{JsonConvert.SerializeObject(value)}", DateTime.UtcNow.ToLongTimeString());
             return Ok();
@@ -104,18 +90,10 @@ namespace DockerTestBD.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<StatusCodeResult> Delete(int id)
         {
-            Company? Company = (from c in context.Companies
-                              where c.Id == id
-                              select c).FirstOrDefault();
+            Company? Company = repository.Get(id);
 
-            if (Company == null)
-            {
-                logger.LogWarning($"DELETE api/Companies/{id} NotFound", DateTime.UtcNow.ToLongTimeString());
-                return BadRequest();
-            }
+            repository.Delete(Company);
 
-            context.Companies.Remove(Company);
-            await context.SaveChangesAsync();
             logger.LogInformation($"DELETE api/Companies/{id}", DateTime.UtcNow.ToLongTimeString());
             return Ok();
         }

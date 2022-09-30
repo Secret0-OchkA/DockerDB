@@ -1,6 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestDockerBD.ApiClient;
 
 namespace DockerTestBDWeb.Contollers
@@ -34,9 +32,9 @@ namespace DockerTestBDWeb.Contollers
         }
         [HttpGet]
         [Route("Post")]
-        public async Task<IActionResult> Post([FromQuery]string name, [FromQuery] int age)
+        public async Task<IActionResult> Post([FromQuery] string name, [FromQuery] int age)
         {
-            await client.PersonsPOSTAsync(name,age).ConfigureAwait(false);
+            await client.PersonsPOSTAsync(name, age).ConfigureAwait(false);
             return Redirect("~/Person/Index");
         }
     }

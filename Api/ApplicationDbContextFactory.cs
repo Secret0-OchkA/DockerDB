@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Repository;
 
-namespace DockerTestBD.Api.Models.EF.Factories
+namespace DockerTestBD.Api
 {
-    public class PostgresContextFactory : IDbContextFactory<ApiContext>
+    public class ApplicationDbContextFactory : IDbContextFactory<ApplicationDbContext>
     {
-        public ApiContext CreateDbContext()
+        ApplicationDbContext IDbContextFactory<ApplicationDbContext>.CreateDbContext()
         {
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
@@ -14,10 +14,10 @@ namespace DockerTestBD.Api.Models.EF.Factories
 
             string connectionStr = config.GetConnectionString("Postgres");
 
-            DbContextOptionsBuilder<ApiContext> optionsBuilder = new DbContextOptionsBuilder<ApiContext>();
+            DbContextOptionsBuilder<ApplicationDbContext> optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseNpgsql(connectionStr);
 
-            return new ApiContext(optionsBuilder.Options);
+            return new ApplicationDbContext(optionsBuilder.Options);
         }
     }
 }

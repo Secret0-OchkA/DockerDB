@@ -1,23 +1,17 @@
-using DockerTestBD.Api.Models.EF;
-using DockerTestBD.Api.Models.EF.Factories;
-using Microsoft.EntityFrameworkCore;
+using Domain.Models;
+using Repository;
+using Repository.RepositoryPattern;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApiContext>(options =>
-{
-    ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-    configurationBuilder.SetBasePath(Directory.GetCurrentDirectory());
-    configurationBuilder.AddJsonFile("appsettings.json");
-    IConfigurationRoot config = configurationBuilder.Build();
-
-    string connectionStr = config.GetConnectionString("Postgres");
-
-    options.UseNpgsql(connectionStr);
-});
+builder.Services.AddDbContextFactory<ApplicationDbContext>();
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IRepository<Company>,CompanyRepository>();
+builder.Services.AddScoped<IRepository<Person>, PersonRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
