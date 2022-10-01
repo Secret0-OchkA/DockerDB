@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repository.RepositoryPattern;
+using Service;
 using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,16 +16,16 @@ namespace DockerTestBD.Api.Controllers
     [ApiController]
     public class PersonsController : ControllerBase
     {
-        readonly IRepository<Person> repository;
+        readonly IService<Person> service;
         readonly ILogger logger;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="context"></param>
         /// <param name="logger"></param>
-        public PersonsController(IRepository<Person> repository, ILogger<PersonsController> logger)
+        public PersonsController(IService<Person> service, ILogger<PersonsController> logger)
         {
-            this.repository = repository;
+            this.service = service;
             this.logger = logger;
 
         }
@@ -36,7 +37,7 @@ namespace DockerTestBD.Api.Controllers
         public IEnumerable<Person> Get()
         {
             logger.LogInformation("GET: api/Persons", DateTime.UtcNow.ToLongTimeString());
-            return repository.GetAll();
+            return service.GetAll();
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace DockerTestBD.Api.Controllers
         public Person Get(int id)
         {
             logger.LogInformation($"GET /api/Persons/{id}", DateTime.UtcNow.ToLongTimeString());
-            return repository.Get(id);
+            return service.Get(id);
         }
 
         /// <summary>
@@ -60,8 +61,7 @@ namespace DockerTestBD.Api.Controllers
         public async Task<StatusCodeResult> Post([FromQuery, Required] string name, [FromQuery, Required] int age)
         {
             logger.LogInformation($"POST /api/Persons Query:{Request.QueryString}", DateTime.UtcNow.ToLongTimeString());
-            repository.Insert(new Person { Name = name, Age = age });
-            repository.SaveChanges();
+            service.Insert(new Person { Name = name, Age = age });
             return Ok();
         }
 
@@ -73,14 +73,13 @@ namespace DockerTestBD.Api.Controllers
         [HttpPut("{id}")]
         public async Task<StatusCodeResult> Put(int id, [FromBody, Required] Person value)
         {
-            Person person = repository.Get(id);
+            Person person = service.Get(id);
 
             person.Name = value.Name;
             person.Work = value.Work;
             person.Age = value.Age;
 
-            repository.Update(person);
-            repository.SaveChanges();
+            service.Update(person);
 
             return Ok();
         }
@@ -92,9 +91,7 @@ namespace DockerTestBD.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<StatusCodeResult> Delete(int id)
         {
-            Person? person = repository.Get(id);
-
-            repository.Delete(person);
+            service.Delete(id);
             return Ok();
         }
     }
